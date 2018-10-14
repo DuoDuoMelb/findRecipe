@@ -48,7 +48,7 @@ public class RecipefinderApplication {
 //            return "index";
 //        }
 //    }
-    public static void recipeFinder() {
+    public static void recipeFinder() throws ParseException {
 //        fridgeList = getFridgelist();
 //        recipeList = getRecipeList();
         if (fridgeList.size() == 0) {
@@ -61,15 +61,15 @@ public class RecipefinderApplication {
 
     }
 
-    public static RecipeInfo recipeGenerator() {
+    public static RecipeInfo recipeGenerator() throws ParseException {
         Date currentDate = new Date();
         for (RecipeInfo recipeInfo : recipeList) {
             int ingredientInFridge = 0;
             int ingredientInRecipe = recipeInfo.getIngredients().size();
             for (Ingredient ingredient : recipeInfo.getIngredients()) {
                 for (FridgeInfo fridgeInfo : fridgeList) {
-                    if (fridgeInfo.getFridgeItem().equals(ingredient.getItem()) && fridgeInfo.getFridgeAmount() <= ingredient.getAmount() &&
-                            fridgeInfo.getFridgeUnit().equals(ingredient.getUnit()) && fridgeInfo.getUseBy().after(currentDate)) {
+                    if (fridgeInfo.getItem().equals(ingredient.getItem()) && fridgeInfo.getAmount() <= ingredient.getAmount() &&
+                            fridgeInfo.getUnit().equals(ingredient.getUnit()) && dateFormatter.parse(fridgeInfo.getUseBy()).after(currentDate)) {
                         ingredientInFridge++;
                     }
                 }
@@ -81,10 +81,10 @@ public class RecipefinderApplication {
         return generatedRecipeProcess(generatedRecipe);
     }
 
-    public static RecipeInfo generatedRecipeProcess(ArrayList<RecipeInfo> generatedRecipe) {
+    public static RecipeInfo generatedRecipeProcess(ArrayList<RecipeInfo> generatedRecipe) throws ParseException {
         ArrayList<Date> sortedItemDate=new ArrayList<Date>();
         for(FridgeInfo fridgeInfo:fridgeList){
-            sortedItemDate.add(fridgeInfo.getUseBy());
+            sortedItemDate.add(dateFormatter.parse(fridgeInfo.getUseBy()));
         }
         Collections.sort(sortedItemDate);
         if(generatedRecipe.size()==1){
@@ -98,8 +98,8 @@ public class RecipefinderApplication {
                 for(RecipeInfo recipeInfo:generatedRecipe){
                     for(Ingredient ingredient:recipeInfo.getIngredients()){
                         for(FridgeInfo fridgeInfo:fridgeList){
-                            if(fridgeInfo.getFridgeItem().equals(ingredient.getItem())){
-                                if(fridgeInfo.getUseBy().compareTo(date)==0){
+                            if(fridgeInfo.getItem().equals(ingredient.getItem())){
+                                if(dateFormatter.parse(fridgeInfo.getUseBy()).compareTo(date)==0){
                                     finalRecipe=recipeInfo;
                                     break;
                                 }
@@ -146,10 +146,10 @@ public class RecipefinderApplication {
 
         Date useBy = dateFormatter.parse(detail[3]);
 
-        fridgeInfo.setFridgeItem(detail[0]);
-        fridgeInfo.setFridgeAmount(Integer.parseInt(detail[1]));
-        fridgeInfo.setFridgeUnit(Unit.valueOf(detail[2]));
-        fridgeInfo.setUseBy(useBy);
+        fridgeInfo.setItem(detail[0]);
+        fridgeInfo.setAmount(Integer.parseInt(detail[1]));
+        fridgeInfo.setUnit(Unit.valueOf(detail[2]));
+        fridgeInfo.setUseBy(useBy.toString());
         return fridgeInfo;
     }
 

@@ -28,10 +28,21 @@ public class InputController {
 //        return "index";
 //    }
 
-//
+    //
+    @RequestMapping({"/fridge", "/"})
+    public String fridge(@RequestBody(required = true) FridgeInfo[] fridgeInfos) {
+
+        for (FridgeInfo fridgeInfo : fridgeInfos) {
+            System.out.println("fridegItem:"+fridgeInfo.getItem());
+            System.out.println("fridegAmount:"+fridgeInfo.getAmount());
+            System.out.println("fridegUnit:"+fridgeInfo.getUnit());
+            System.out.println("fridegUseBy:"+fridgeInfo.getUseBy());
+        }
+        return "fridge";
+    }
+
     @RequestMapping({"/recipe", "/"})
     public String test(@RequestBody(required = true) RecipeInfo[] recipeInfos) {
-        System.out.println("aaaaaaaa");
         //context.put("username", username);
 //        String replace=map.get("ingredients").toString().replace("["," ");
 //        replace=replace.replace("]"," ");
@@ -43,28 +54,21 @@ public class InputController {
 //        JSONObject jsonObject=new JSONObject(map.get("ingredients"));
 //            JSONObject jsonObject=new JSONObject(map);
 //            JSONArray ingredientArray=new JSONArray(strings);
-        for(RecipeInfo recipeInfo:recipeInfos){
-//            JSONObject jsonObject=new JSONObject(ingredient);
-//            System.out.println(jsonObject.get("name"));
+        for (RecipeInfo recipeInfo : recipeInfos) {
             System.out.println(recipeInfo.getName());
-//            Ingredient ingredient=new Ingredient(recipeInfo.getIngredients());
-            JSONObject jsonObject=new JSONObject(recipeInfo);
-            System.out.println("recipe name"+recipeInfo.getName());
-            JSONArray jsonArray=(JSONArray) jsonObject.get("ingredients");
+            JSONObject jsonObject = new JSONObject(recipeInfo);
+            System.out.println("recipe name" + recipeInfo.getName());
+            JSONArray jsonArray = (JSONArray) jsonObject.get("ingredients");
             Unit unit;
             for (int i = 0; i < jsonArray.length(); i++) {
-//                System.out.println(jsonArray.get(i).toString());
                 JSONObject jsonObject1 = new JSONObject(jsonArray.get(i).toString());
-                unit=Unit.valueOf(recipeInfo.getIngredients().get(i).getUnit().toString());
-                System.out.println("item:"+jsonObject1.get("item"));
-                System.out.println("amount"+jsonObject1.get("amount").toString());
+                unit = Unit.valueOf(recipeInfo.getIngredients().get(i).getUnit().toString());
+                System.out.println("item:" + jsonObject1.get("item"));
+                System.out.println("amount" + jsonObject1.get("amount").toString());
                 System.out.println(unit);
             }
-//            JSONObject jsonObject1 = new JSONObject(jsonArray.get(i).toString());
-//            System.out.println(jsonObject1.get("item").toString());
-//        }
-//            System.out.println(jsonArray.get(0).toString());
         }
+        return "recipe";
 //            for(int i=0;i<ingredientArray.length();i++){
 //                System.out.println(ingredientArray.get(i).toString());
 //                JSONObject ingredient=new JSONObject(ingredientArray.get(i).toString());
@@ -77,7 +81,7 @@ public class InputController {
 //            JSONObject jsonObject1 = new JSONObject(ingredientsArray.get(i).toString());
 //            System.out.println(jsonObject1.get("item").toString());
 //        }
-        return "recipe";
+
     }
 }
 
@@ -97,19 +101,6 @@ public class InputController {
 
 //    }
 
-//    public String index(String name, String pwd){
-//        String s1=name;
-//        String s2=pwd;
-//        return s1+s2;
-//        return "index";
-
-
-//        @RequestMapping(value = "/test6")
-////		@ResponseBody
-//        public String test6(@ModelAttribute("kkk") String s){
-//            return "test";
-//
-//        }
 
 
 

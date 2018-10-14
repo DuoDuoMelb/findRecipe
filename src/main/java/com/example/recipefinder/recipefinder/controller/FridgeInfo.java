@@ -1,41 +1,47 @@
 package com.example.recipefinder.recipefinder.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class FridgeInfo {
-    private String fridgeItem;
-    private int fridgeAmount;
-    private Date useBy;
-    private Unit fridgeUnit;
+    private String item;
+    private int amount;
+    private String useBy;
+    private Unit unit;
 
-    public void setFridgeItem(String fridgeItem){
-        this.fridgeItem=fridgeItem;
-    }
-    public String getFridgeItem(){
-        return fridgeItem;
+    public FridgeInfo() {
+        super();
     }
 
-    public void setFridgeAmount(int fridgeAmount){
-        this.fridgeAmount=fridgeAmount;
+    public void setItem(String fridgeItem) {
+        this.item = fridgeItem;
     }
 
-    public int getFridgeAmount() {
-        return fridgeAmount;
+    public String getItem() {
+        return item;
     }
 
-    public void setUseBy(Date useBy) {
+    public void setAmount(int fridgeAmount) {
+        this.amount = fridgeAmount;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setUseBy(String useBy) {
         this.useBy = useBy;
     }
 
-    public Date getUseBy() {
+    public String getUseBy() {
         return useBy;
     }
 
-    public void setFridgeUnit(Unit fridgeUnit) {
-        this.fridgeUnit = fridgeUnit;
+    public void setUnit(Unit fridgeUnit) {
+        this.unit = fridgeUnit;
     }
 
-    public Unit getFridgeUnit() {
-        return fridgeUnit;
+    public Unit getUnit() {
+        return unit;
     }
 }
