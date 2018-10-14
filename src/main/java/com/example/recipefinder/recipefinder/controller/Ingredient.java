@@ -1,33 +1,34 @@
 package com.example.recipefinder.recipefinder.controller;
 
-import java.util.Date;
-
 public class Ingredient {
-    private String ingredientItem;
-    private int ingredientAmount;
-    private Unit ingredientUnit;
-
-    public String getIngredientItem() {
-        return ingredientItem;
+    private String item;
+    private int amount;
+    private Unit unit;
+    public Ingredient(){
+        super();
     }
 
-    public void setIngredientItem(String ingredientItem) {
-        this.ingredientItem = ingredientItem;
+    public String getItem() {
+        return item;
     }
 
-    public int getIngredientAmount() {
-        return ingredientAmount;
+    public void setItem(String ingredientItem) {
+        this.item = ingredientItem;
     }
 
-    public void setIngredientAmount(int ingredientAmount) {
-        this.ingredientAmount = ingredientAmount;
+    public int getAmount() {
+        return amount;
     }
 
-    public Unit getIngredientUnit() {
-        return ingredientUnit;
+    public void setAmount(int ingredientAmount) {
+        this.amount = ingredientAmount;
     }
 
-    public void setIngredientUnit(Unit ingredientUnit) {
-        this.ingredientUnit = ingredientUnit;
+    public Unit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(Unit ingredientUnit) {
+        this.unit = ingredientUnit;
     }
 }

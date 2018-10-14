@@ -7,7 +7,10 @@ import com.example.recipefinder.recipefinder.controller.Unit;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.json.JSONArray;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,7 @@ import java.util.*;
 import org.json.JSONObject;
 
 @SpringBootApplication
+@EnableAutoConfiguration
 public class RecipefinderApplication {
     public static String fridgeItem, recipeItem, recipeName;
     public static int fridgeAmount, recipeAmount;
@@ -30,8 +34,10 @@ public class RecipefinderApplication {
     private static RecipeInfo finalRecipe = new RecipeInfo();
 
     public static void main(String[] args) {
+//        System.out.println("aaaaaaaa");
         SpringApplication.run(RecipefinderApplication.class, args);
-        recipeFinder();
+//        new SpringApplicationBuilder(RecipefinderApplication.class).web(WebApplicationType.NONE).run(args);
+//        recipeFinder();
 
     }
 
@@ -43,8 +49,8 @@ public class RecipefinderApplication {
 //        }
 //    }
     public static void recipeFinder() {
-        fridgeList = getFridgelist();
-        recipeList = getRecipeList();
+//        fridgeList = getFridgelist();
+//        recipeList = getRecipeList();
         if (fridgeList.size() == 0) {
             System.out.println("Please enter fridge items");
         } else if (recipeList.size() == 0) {
@@ -59,11 +65,11 @@ public class RecipefinderApplication {
         Date currentDate = new Date();
         for (RecipeInfo recipeInfo : recipeList) {
             int ingredientInFridge = 0;
-            int ingredientInRecipe = recipeInfo.getIngredientList().size();
-            for (Ingredient ingredient : recipeInfo.getIngredientList()) {
+            int ingredientInRecipe = recipeInfo.getIngredients().size();
+            for (Ingredient ingredient : recipeInfo.getIngredients()) {
                 for (FridgeInfo fridgeInfo : fridgeList) {
-                    if (fridgeInfo.getFridgeItem().equals(ingredient.getIngredientItem()) && fridgeInfo.getFridgeAmount() <= ingredient.getIngredientAmount() &&
-                            fridgeInfo.getFridgeUnit().equals(ingredient.getIngredientUnit()) && fridgeInfo.getUseBy().after(currentDate)) {
+                    if (fridgeInfo.getFridgeItem().equals(ingredient.getItem()) && fridgeInfo.getFridgeAmount() <= ingredient.getAmount() &&
+                            fridgeInfo.getFridgeUnit().equals(ingredient.getUnit()) && fridgeInfo.getUseBy().after(currentDate)) {
                         ingredientInFridge++;
                     }
                 }
@@ -85,14 +91,14 @@ public class RecipefinderApplication {
             finalRecipe=generatedRecipe.get(0);
         }
         else if (generatedRecipe.size() == 0) {
-            finalRecipe.setRecipeName("Order TakeOut");
+            finalRecipe.setName("Order TakeOut");
         }
         else{
             for(Date date:sortedItemDate){
                 for(RecipeInfo recipeInfo:generatedRecipe){
-                    for(Ingredient ingredient:recipeInfo.getIngredientList()){
+                    for(Ingredient ingredient:recipeInfo.getIngredients()){
                         for(FridgeInfo fridgeInfo:fridgeList){
-                            if(fridgeInfo.getFridgeItem().equals(ingredient.getIngredientItem())){
+                            if(fridgeInfo.getFridgeItem().equals(ingredient.getItem())){
                                 if(fridgeInfo.getUseBy().compareTo(date)==0){
                                     finalRecipe=recipeInfo;
                                     break;
@@ -112,19 +118,19 @@ public class RecipefinderApplication {
     }
 
     public ArrayList<FridgeInfo> getFridgelist() {
-        fridgeList.add(fridgeProcess());
+//        fridgeList.add(fridgeProcess());
         return fridgeList;
     }
 
     public ArrayList<RecipeInfo> getRecipeList() {
-        recipeList.add(recipeProcess());
+//        recipeList.add(recipeProcess());
         return recipeList;
     }
 
     public RecipeInfo recipeProcess(JSONObject recipe) {
 
         RecipeInfo recipeInfo = new RecipeInfo();
-        recipeInfo.setRecipeName((String) recipe.get("name"));
+        recipeInfo.setName((String) recipe.get("name"));
         JSONArray ingredientJson = (JSONArray) (recipe.get("ingredient"));
         ArrayList<Ingredient> ingredientDetail = new ArrayList<Ingredient>();
         for (int i = 0; i < ingredientJson.length(); i++) {
@@ -150,9 +156,9 @@ public class RecipefinderApplication {
     public Ingredient ingredientProcess(JSONObject ingredient) {
 
         Ingredient ingredient1 = new Ingredient();
-        ingredient1.setIngredientItem((String) ingredient.get("item"));
-        ingredient1.setIngredientAmount(Integer.parseInt((String) ingredient.get("amount")));
-        ingredient1.setIngredientUnit(Unit.valueOf((String) ingredient.get("unit")));
+        ingredient1.setItem((String) ingredient.get("item"));
+        ingredient1.setAmount(Integer.parseInt((String) ingredient.get("amount")));
+        ingredient1.setUnit(Unit.valueOf((String) ingredient.get("unit")));
         return ingredient1;
     }
 

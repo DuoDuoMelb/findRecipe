@@ -3,22 +3,24 @@ package com.example.recipefinder.recipefinder.controller;
 import java.util.ArrayList;
 
 public class RecipeInfo {
-    private String recipeName;
-    private ArrayList<Ingredient> ingredientList;
-
-    public String getRecipeName() {
-        return recipeName;
+    private String name;
+    private ArrayList<Ingredient> ingredients;
+    public RecipeInfo(){
+        super();
+    }
+    public String getName() {
+        return name;
     }
 
-    public void setRecipeName(String recipeName) {
-        this.recipeName = recipeName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public ArrayList<Ingredient> getIngredientList() {
-        return ingredientList;
+    public ArrayList<Ingredient> getIngredients() {
+        return ingredients;
     }
 
-    public void setIngredientList(ArrayList<Ingredient> ingredientList) {
-        this.ingredientList = ingredientList;
+    public void setIngredients(ArrayList<Ingredient> ingredientList) {
+        this.ingredients = ingredientList;
     }
 }
