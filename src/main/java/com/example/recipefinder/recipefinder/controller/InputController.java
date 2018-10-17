@@ -7,6 +7,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,15 +25,13 @@ import java.util.Scanner;
 public class InputController {
 
 
-    //        @RequestMapping({"test","/"})
-//        String home() {
-//            return "test";
-//        }
     ArrayList<FridgeInfo> fList = new ArrayList<>();
     ArrayList<RecipeInfo> rList = new ArrayList<>();
     FridgeInfo fridge[] = null;
+    String finalRecipeName = null;
 
-    @RequestMapping("/test.html")
+
+    @RequestMapping("/fridge.html")
     public String toIndex(HttpServletRequest request) throws UnsupportedEncodingException {
         request.setCharacterEncoding("utf-8");
         String item = request.getParameter("item");
@@ -46,20 +46,15 @@ public class InputController {
             fridgeInfo.setUnit(Unit.valueOf(unit));
             fridgeInfo.setUseBy(useBY);
             fList.add(fridgeInfo);
-            System.out.println(fList.size());
-            for (FridgeInfo f : fList) {
-                System.out.println(f.getItem());
-                System.out.println(f.getUnit().toString());
-            }
         }
         RecipefinderApplication recipefinderApplication = new RecipefinderApplication();
         recipefinderApplication.setFridge(fList);
 
-        return "test";
+        return "fridge";
     }
 
-    @RequestMapping("/test1.html")
-    public String recipe(HttpServletRequest request) throws UnsupportedEncodingException, ParseException {
+    @RequestMapping("/recipe.html")
+    public String recipe(HttpServletRequest request, ModelMap map) throws UnsupportedEncodingException, ParseException {
         request.setCharacterEncoding("utf-8");
         String name = request.getParameter("name");
         String item = request.getParameter("item");
@@ -76,12 +71,11 @@ public class InputController {
             ingredient.setUnit(Unit.valueOf(unit));
             ingredientList.add(ingredient);
 
-            for(RecipeInfo r: rList){
-                System.out.println("rlist size"+rList.size());
-                if(r.getName().equals(name)){
-                    ArrayList<Ingredient> ing=new ArrayList<>();
-                    ing=r.getIngredients();
-                    for(Ingredient i:ing){
+            for (RecipeInfo r : rList) {
+                if (r.getName().equals(name)) {
+                    ArrayList<Ingredient> ing = new ArrayList<>();
+                    ing = r.getIngredients();
+                    for (Ingredient i : ing) {
                         ingredientList.add(i);
                     }
                     rList.remove(r);
@@ -92,13 +86,12 @@ public class InputController {
             rList.add(recipeInfo);
             RecipefinderApplication recipefinderApplication = new RecipefinderApplication();
             recipefinderApplication.setRecipe(rList);
-            return "test1";
-//            System.out.println(rList.size());
+            finalRecipeName = recipefinderApplication.getFinalRecipe();
+            map.addAttribute("host", finalRecipeName);
+            return "recipe";
         }
-//        for (RecipeInfo r : rList) {
-//            System.out.println(r.getName());
-//        }
-            return "test1";
+
+        return "recipe";
     }
 
 //    @RequestMapping({"/fridge", "/"})

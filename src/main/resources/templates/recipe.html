@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8" />
     <title>Recipe</title>
@@ -18,9 +18,11 @@
     <br>
     Unit:<br>
     <input type="text" name="unit" placeholder="of,grams,ml,slices">
+    <br><br>
+    Final recipe:
+    <p th:text="${host}"></p>
     <br>
-    <br>
-    <input type="submit" value="提交" />
+    <input type="submit" value="submit" />
 
 </form>
 </body>
