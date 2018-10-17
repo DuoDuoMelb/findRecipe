@@ -32,7 +32,7 @@ public class RecipefinderApplication {
     public static ArrayList<RecipeInfo> recipeList = null;
     private static FridgeInfo[] fridgeInfos = null;
     private static RecipeInfo[] recipeInfos = null;
-    private static ArrayList<RecipeInfo> generatedRecipe = new ArrayList<RecipeInfo>();
+    private static ArrayList<RecipeInfo> generatedRecipe;
     private static RecipeInfo finalRecipe = new RecipeInfo();
 
     public static void main(String[] args) {
@@ -57,6 +57,11 @@ public class RecipefinderApplication {
         recipeList=r;
         System.out.println("fridge list"+fridgeList.size());
         System.out.println("recipe list"+recipeList.size());
+       for(RecipeInfo recipeInfo:r){
+           System.out.println(recipeInfo.getName());
+           for(Ingredient ingredient:recipeInfo.getIngredients())
+           System.out.println(ingredient.getItem());
+       }
 //        for (RecipeInfo recipeInfo : recipeInfos) {
 //            JSONObject jsonObject = new JSONObject(recipeInfo);
 //            System.out.println("recipe name:" + recipeInfo.getName());
@@ -88,6 +93,7 @@ public class RecipefinderApplication {
 
     public static RecipeInfo recipeGenerator(ArrayList<FridgeInfo> f, ArrayList<RecipeInfo> r) throws ParseException {
         Date currentDate = new Date();
+        generatedRecipe = new ArrayList<RecipeInfo>();
         for (RecipeInfo recipeInfo : r) {
             int ingredientInFridge = 0;
             int ingredientInRecipe = recipeInfo.getIngredients().size();

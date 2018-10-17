@@ -77,26 +77,28 @@ public class InputController {
             ingredientList.add(ingredient);
 
             for(RecipeInfo r: rList){
+                System.out.println("rlist size"+rList.size());
                 if(r.getName().equals(name)){
                     ArrayList<Ingredient> ing=new ArrayList<>();
                     ing=r.getIngredients();
                     for(Ingredient i:ing){
                         ingredientList.add(i);
                     }
-
+                    rList.remove(r);
+                    break;
                 }
             }
             recipeInfo.setIngredients(ingredientList);
-//            rList.remove(recipeInfo);
             rList.add(recipeInfo);
-            System.out.println(rList.size());
+            RecipefinderApplication recipefinderApplication = new RecipefinderApplication();
+            recipefinderApplication.setRecipe(rList);
+            return "test1";
+//            System.out.println(rList.size());
         }
-        for (RecipeInfo r : rList) {
-            System.out.println(r.getName());
-        }
-        RecipefinderApplication recipefinderApplication = new RecipefinderApplication();
-        recipefinderApplication.setRecipe(rList);
-        return "test1";
+//        for (RecipeInfo r : rList) {
+//            System.out.println(r.getName());
+//        }
+            return "test1";
     }
 
 //    @RequestMapping({"/fridge", "/"})
