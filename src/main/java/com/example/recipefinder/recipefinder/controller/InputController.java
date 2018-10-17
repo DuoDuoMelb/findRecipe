@@ -9,6 +9,9 @@ import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -19,25 +22,97 @@ import java.util.Scanner;
 @Controller
 public class InputController {
 
-    @RequestMapping({"/fridge", "/"})
-    public String fridge(@RequestBody(required = true) FridgeInfo[] fridgeInfos) {
-        RecipefinderApplication recipefinderApplication = new RecipefinderApplication();
-        recipefinderApplication.setFridge(fridgeInfos);
-        return "fridge";}
-//        for (FridgeInfo fridgeInfo : fridgeInfos) {
-//            System.out.println("fridegItem:"+fridgeInfo.getItem());
-//            System.out.println("fridegAmount:"+fridgeInfo.getAmount());
-//            System.out.println("fridegUnit:"+fridgeInfo.getUnit());
-//            System.out.println("fridegUseBy:"+fridgeInfo.getUseBy());
+
+    //        @RequestMapping({"test","/"})
+//        String home() {
+//            return "test";
 //        }
+    ArrayList<FridgeInfo> fList = new ArrayList<>();
+    ArrayList<RecipeInfo> rList = new ArrayList<>();
+    FridgeInfo fridge[] = null;
 
+    @RequestMapping("/test.html")
+    public String toIndex(HttpServletRequest request) throws UnsupportedEncodingException {
+        request.setCharacterEncoding("utf-8");
+        String item = request.getParameter("item");
+        String amount = request.getParameter("amount");
+        String unit = request.getParameter("unit");
+        String useBY = request.getParameter("useBy");
 
-    @RequestMapping({"/recipe", "/"})
-    public String test(@RequestBody(required = true) RecipeInfo[] recipeInfos) throws MalformedURLException, ParseException {
+        if (item != null && amount != "" && unit != null && useBY != null) {
+            FridgeInfo fridgeInfo = new FridgeInfo();
+            fridgeInfo.setItem(item);
+            fridgeInfo.setAmount(Integer.parseInt(amount));
+            fridgeInfo.setUnit(Unit.valueOf(unit));
+            fridgeInfo.setUseBy(useBY);
+            fList.add(fridgeInfo);
+            System.out.println(fList.size());
+            for (FridgeInfo f : fList) {
+                System.out.println(f.getItem());
+                System.out.println(f.getUnit().toString());
+            }
+        }
         RecipefinderApplication recipefinderApplication = new RecipefinderApplication();
-        recipefinderApplication.setRecipe(recipeInfos);
-        return "recipe";
+        recipefinderApplication.setFridge(fList);
+
+        return "test";
     }
+
+    @RequestMapping("/test1.html")
+    public String recipe(HttpServletRequest request) throws UnsupportedEncodingException, ParseException {
+        request.setCharacterEncoding("utf-8");
+        String name = request.getParameter("name");
+        String item = request.getParameter("item");
+        String amount = request.getParameter("amount");
+        String unit = request.getParameter("unit");
+        if (item != null && amount != "" && unit != null && name != null) {
+            RecipeInfo recipeInfo = new RecipeInfo();
+            ArrayList<Ingredient> ingredientList = new ArrayList<>();
+            Ingredient ingredient = new Ingredient();
+
+            recipeInfo.setName(name);
+            ingredient.setItem(item);
+            ingredient.setAmount(Integer.parseInt(amount));
+            ingredient.setUnit(Unit.valueOf(unit));
+            ingredientList.add(ingredient);
+
+            for(RecipeInfo r: rList){
+                if(r.getName().equals(name)){
+                    ArrayList<Ingredient> ing=new ArrayList<>();
+                    ing=r.getIngredients();
+                    for(Ingredient i:ing){
+                        ingredientList.add(i);
+                    }
+
+                }
+            }
+            recipeInfo.setIngredients(ingredientList);
+//            rList.remove(recipeInfo);
+            rList.add(recipeInfo);
+            System.out.println(rList.size());
+        }
+        for (RecipeInfo r : rList) {
+            System.out.println(r.getName());
+        }
+        RecipefinderApplication recipefinderApplication = new RecipefinderApplication();
+        recipefinderApplication.setRecipe(rList);
+        return "test1";
+    }
+
+//    @RequestMapping({"/fridge", "/"})
+//    public String fridge(@RequestBody(required = true) FridgeInfo[] fridgeInfos) {
+//        RecipefinderApplication recipefinderApplication = new RecipefinderApplication();
+//        recipefinderApplication.setFridge(fridgeInfos);
+//        return "fridge";
+//    }
+
+//    @RequestMapping({"/recipe", "/"})
+//    public String test(@RequestBody(required = true) RecipeInfo[] recipeInfos) throws MalformedURLException, ParseException {
+//        RecipefinderApplication recipefinderApplication = new RecipefinderApplication();
+//        recipefinderApplication.setFridge(fList);
+//        recipefinderApplication.setRecipe(recipeInfos);
+//        return "recipe";
+//    }
 }
 
 

@@ -40,55 +40,59 @@ public class RecipefinderApplication {
 
     }
 
-    public void setFridge(FridgeInfo[] fridge) {
-        fridgeInfos = fridge;
-        for (FridgeInfo fridgeInfo : fridgeInfos) {
-            System.out.println("fridegItem: " + fridgeInfo.getItem());
-            System.out.println("fridegAmount: " + fridgeInfo.getAmount());
-            System.out.println("fridegUnit: " + fridgeInfo.getUnit());
-            System.out.println("fridegUseBy: " + fridgeInfo.getUseBy());
-        }
+    public void setFridge(ArrayList<FridgeInfo> f) {
+        fridgeList=f;
+        System.out.println("fridge list"+fridgeList.size());
+//        fridgeInfos = fridge;
+//        for (FridgeInfo fridgeInfo : fridgeInfos) {
+//            System.out.println("fridgeItem: " + fridgeInfo.getItem());
+//            System.out.println("fridgeAmount: " + fridgeInfo.getAmount());
+//            System.out.println("fridgeUnit: " + fridgeInfo.getUnit());
+//            System.out.println("fridgeUseBy: " + fridgeInfo.getUseBy());
+//        }
 
     }
 
-    public void setRecipe(RecipeInfo[] recipe) throws ParseException {
-        recipeInfos = recipe;
-        for (RecipeInfo recipeInfo : recipeInfos) {
-            JSONObject jsonObject = new JSONObject(recipeInfo);
-            System.out.println("recipe name:" + recipeInfo.getName());
-            JSONArray jsonArray = (JSONArray) jsonObject.get("ingredients");
-            System.out.println("Ingredient of " + recipeInfo.getName() + " is:");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject1 = new JSONObject(jsonArray.get(i).toString());
-                Unit unit = Unit.valueOf(recipeInfo.getIngredients().get(i).getUnit().toString());
-                System.out.println("item:" + jsonObject1.get("item"));
-                System.out.println("amount:" + jsonObject1.get("amount").toString());
-                System.out.println("unit:" + unit);
-            }
-        }
-        recipeFinder(fridgeInfos, recipeInfos);
+    public void setRecipe(ArrayList<RecipeInfo> r) throws ParseException {
+        recipeList=r;
+        System.out.println("fridge list"+fridgeList.size());
+        System.out.println("recipe list"+recipeList.size());
+//        for (RecipeInfo recipeInfo : recipeInfos) {
+//            JSONObject jsonObject = new JSONObject(recipeInfo);
+//            System.out.println("recipe name:" + recipeInfo.getName());
+//            JSONArray jsonArray = (JSONArray) jsonObject.get("ingredients");
+//            System.out.println("Ingredient of " + recipeInfo.getName() + " is:");
+//            for (int i = 0; i < jsonArray.length(); i++) {
+//                JSONObject jsonObject1 = new JSONObject(jsonArray.get(i).toString());
+//                Unit unit = Unit.valueOf(recipeInfo.getIngredients().get(i).getUnit().toString());
+//                System.out.println("item:" + jsonObject1.get("item"));
+//                System.out.println("amount:" + jsonObject1.get("amount").toString());
+//                System.out.println("unit:" + unit);
+//            }
+//        }
+        recipeFinder(fridgeList, recipeList);
 
     }
 
-    public static void recipeFinder(FridgeInfo[] fridgeInfos, RecipeInfo[] recipeInfos) throws ParseException {
-        if (fridgeInfos.length == 0) {
+    public static void recipeFinder(ArrayList<FridgeInfo> f, ArrayList<RecipeInfo> r) throws ParseException {
+        if (f.size()==0) {
             System.out.println("Please enter fridge items");
-        } else if (recipeInfos.length == 0) {
+        } else if (r.size()==0) {
             System.out.println("Please enter recipe items");
         } else {
-            finalRecipe = recipeGenerator(fridgeInfos, recipeInfos);
+            finalRecipe = recipeGenerator(f,r);
             System.out.println("final recipe:" + finalRecipe.getName().toString());
         }
 
     }
 
-    public static RecipeInfo recipeGenerator(FridgeInfo[] fridgeInfos, RecipeInfo[] recipeInfos) throws ParseException {
+    public static RecipeInfo recipeGenerator(ArrayList<FridgeInfo> f, ArrayList<RecipeInfo> r) throws ParseException {
         Date currentDate = new Date();
-        for (RecipeInfo recipeInfo : recipeInfos) {
+        for (RecipeInfo recipeInfo : r) {
             int ingredientInFridge = 0;
             int ingredientInRecipe = recipeInfo.getIngredients().size();
             for (Ingredient ingredient : recipeInfo.getIngredients()) {
-                for (FridgeInfo fridgeInfo : fridgeInfos) {
+                for (FridgeInfo fridgeInfo : f) {
                     if (fridgeInfo.getItem().equals(ingredient.getItem()) && fridgeInfo.getAmount() >= ingredient.getAmount() &&
                             fridgeInfo.getUnit().equals(ingredient.getUnit()) && dateFormatter.parse(fridgeInfo.getUseBy()).after(currentDate)) {
                         ingredientInFridge++;
@@ -99,15 +103,15 @@ public class RecipefinderApplication {
                 generatedRecipe.add(recipeInfo);
             }
         }
-        return generatedRecipeProcess(generatedRecipe, fridgeInfos);
+        return generatedRecipeProcess(generatedRecipe, f);
     }
 
 
-    public static RecipeInfo generatedRecipeProcess(ArrayList<RecipeInfo> generatedRecipe, FridgeInfo[] fridgeInfos) throws ParseException {
+    public static RecipeInfo generatedRecipeProcess(ArrayList<RecipeInfo> generatedRecipe, ArrayList<FridgeInfo> f) throws ParseException {
         ArrayList<Date> sortedItemDate = new ArrayList<Date>();
         Date current = new Date();
 //        System.out.println("size:"+generatedRecipe.size());
-        for (FridgeInfo fridgeInfo : fridgeInfos) {
+        for (FridgeInfo fridgeInfo : f) {
             sortedItemDate.add(dateFormatter.parse(fridgeInfo.getUseBy()));
         }
         Collections.sort(sortedItemDate);
@@ -120,7 +124,7 @@ public class RecipefinderApplication {
                 if (date.compareTo(current) > 0) {
                     for (RecipeInfo recipeInfo : generatedRecipe) {
                         for (Ingredient ingredient : recipeInfo.getIngredients()) {
-                            for (FridgeInfo fridgeInfo : fridgeInfos) {
+                            for (FridgeInfo fridgeInfo : f) {
                                 if (fridgeInfo.getItem().equals(ingredient.getItem())) {
                                     if (dateFormatter.parse(fridgeInfo.getUseBy()).compareTo(date) == 0) {
                                         finalRecipe = recipeInfo;
